@@ -42,7 +42,7 @@ export function SessionDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<import("@supabase/supabase-js").User | null>(null);
   const supabase = createClient();
   const router = useRouter();
 
@@ -66,6 +66,7 @@ export function SessionDashboard() {
     } finally {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -75,8 +75,12 @@ export default function AuthPage() {
 
       router.push("/");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan. Silakan coba lagi.");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Terjadi kesalahan. Silakan coba lagi.");
+      }
       console.error(err);
     } finally {
       setIsLoading(false);

@@ -223,6 +223,7 @@ export async function getMyJoinedSessions(): Promise<Array<{
     return [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return data.map((p: any) => ({
     id: p.session_id,
     title: p.study_sessions.title,
