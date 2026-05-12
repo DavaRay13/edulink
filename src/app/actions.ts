@@ -290,17 +290,20 @@ export async function sendMessage(
   
   if (!user) return { success: false, error: 'Anda harus login!' };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const payload: any = {
+    session_id,
+    user_id: user.id,
+    content
+  };
+
+  // Only include attachments if they are provided
+  if (attachment_url) payload.attachment_url = attachment_url;
+  if (attachment_type) payload.attachment_type = attachment_type;
+
   const { data, error } = await supabase
     .from('messages')
-    .insert([
-      { 
-        session_id, 
-        user_id: user.id, 
-        content,
-        attachment_url,
-        attachment_type
-      }
-    ])
+    .insert([payload])
     .select();
 
   if (error) {
