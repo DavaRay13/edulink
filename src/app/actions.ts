@@ -259,3 +259,44 @@ export async function getCurrentUser() {
   return data;
 }
 
+// 9. Get messages for a session
+export async function getMessages(session_id: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('messages')
+    .select(`
+      *,
+      users(nama)
+    `)
+    .eq('session_id', session_id)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching messages:', error);
+    return [];
+  }
+  return data;
+}
+
+// 10. Send a message
+export async function sendMessage(session_id: string, content: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return { success: false, error: 'Anda harus login!' };
+
+  const { data, error } = await supabase
+    .from('messages')
+    .insert([
+      { session_id, user_id: user.id, content }
+    ])
+    .select();
+
+  if (error) {
+    console.error('Error sending message:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, data };
+}
+

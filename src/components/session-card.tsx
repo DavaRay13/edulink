@@ -1,10 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Clock, MapPin, Users } from "lucide-react";
+import { Clock, MapPin, Users, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedButton } from "@/components/ui/animated-button";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { ChatModal } from "@/components/chat-modal";
 
 interface Session {
   id: string;
@@ -35,6 +38,7 @@ export function SessionCard({
   isLeaving,
   joinedSessionIds,
 }: SessionCardProps) {
+  const [chatOpen, setChatOpen] = useState(false);
   const isFull = session.current_capacity >= session.max_capacity;
   const isJoined = joinedSessionIds.has(session.id);
 
@@ -94,7 +98,19 @@ export function SessionCard({
         </CardContent>
 
         {/* Footer with Join/Leave Button */}
-        <div className="px-4 pb-4 mt-auto">
+        <div className="px-4 pb-4 mt-auto space-y-2">
+          {isJoined && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 flex items-center justify-center gap-2"
+              onClick={() => setChatOpen(true)}
+            >
+              <MessageSquare className="w-4 h-4" />
+              Buka Chat
+            </Button>
+          )}
+
           {isJoined ? (
             <AnimatedButton
               variant="outline"
@@ -130,6 +146,13 @@ export function SessionCard({
           )}
         </div>
       </Card>
+
+      <ChatModal
+        open={chatOpen}
+        onOpenChange={setChatOpen}
+        sessionId={session.id}
+        sessionTitle={session.title}
+      />
     </motion.div>
   );
 }
