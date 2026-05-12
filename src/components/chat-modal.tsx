@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, X, Loader2, User } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
