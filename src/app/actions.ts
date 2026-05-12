@@ -279,7 +279,12 @@ export async function getMessages(session_id: string) {
 }
 
 // 10. Send a message
-export async function sendMessage(session_id: string, content: string) {
+export async function sendMessage(
+  session_id: string, 
+  content: string, 
+  attachment_url?: string, 
+  attachment_type?: 'image' | 'audio'
+) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -288,7 +293,13 @@ export async function sendMessage(session_id: string, content: string) {
   const { data, error } = await supabase
     .from('messages')
     .insert([
-      { session_id, user_id: user.id, content }
+      { 
+        session_id, 
+        user_id: user.id, 
+        content,
+        attachment_url,
+        attachment_type
+      }
     ])
     .select();
 
@@ -298,5 +309,25 @@ export async function sendMessage(session_id: string, content: string) {
   }
 
   return { success: true, data };
+}
+
+// 11. Delete a message
+export async function deleteMessage(message_id: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return { success: false, error: 'Anda harus login!' };
+
+  const { error } = await supabase
+    .from('messages')
+    .delete()
+    .match({ id: message_id, user_id: user.id });
+
+  if (error) {
+    console.error('Error deleting message:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
 }
 
