@@ -85,10 +85,6 @@ export function CreateSessionModal({
     setIsSubmitting(true);
     setError(null);
 
-    // For demo purposes - in production, get user ID from auth
-    // Using first user from seed data
-    const DEMO_CREATOR_ID = "b0000001-0001-0001-0001-000000000001";
-
     try {
       const formData = new FormData();
       formData.append("title", title);
@@ -96,7 +92,6 @@ export function CreateSessionModal({
       formData.append("location", location);
       formData.append("time", time);
       formData.append("max_capacity", maxCapacity);
-      formData.append("creator_id", DEMO_CREATOR_ID);
 
       const result = await createStudySession(formData);
 
